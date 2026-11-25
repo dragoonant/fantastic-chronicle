@@ -49,7 +49,9 @@ The bot plays far worse than a person (it wins about 13% of runs), so read its n
 
 ## Art (Hugging Face)
 
-`npm run art` generates the art (heroes, all monsters, Evils, regions and one illustration per card type) on the public FLUX.1-schnell Space and pixelates it into `public/art`. It skips anything already made, so it can be re-run until done. Without an account the free quota allows only a few images; with a free Hugging Face account it allows many more. To use your account, sign in once with the Hugging Face CLI that is already in the project environment (it asks for a token you create at huggingface.co/settings/tokens and stores it on your machine):
+All 103 images are in `public/art` (rendered 2026-11-25): 8 heroes, 58 monsters (Evils and lieutenants included), 20 regions and 17 card-type illustrations. Each is FLUX.1-schnell at 4 steps with a fixed seed, pixelated to the native grid (heroes 128x160, monsters 128x128, regions 192x128, card types 128x96) with a 40-colour palette.
+
+`npm run art` renders anything missing and skips what exists, so delete an image (and its raw master in `art-masters/hf/raw/`) to render it again. By default it goes through Hugging Face's inference router with provider `fal-ai`, which needs a sign-in and bills the Hugging Face account per image. `--provider space` uses the public FLUX.1-schnell Space instead, which works without an account but allows only a few images. To sign in once (it asks for a token you create at huggingface.co/settings/tokens and stores it on your machine):
 
 ```bash
 tools/.venv/Scripts/hf auth login
@@ -65,4 +67,4 @@ python -m venv tools/.venv
 tools/.venv/Scripts/python -m pip install gradio_client huggingface_hub pillow
 ```
 
-Then run `npm run art` again. The game shows a clean placeholder for any card without art. The job list comes from the game content: `npx vite-node tools/art-jobs.ts`.
+The job list comes from the game content: `npx vite-node tools/art-jobs.ts`. Its `REROLL` table holds the images re-rendered after a contact-sheet check: humanoid enemies are named "a human foe" because "a monster" gave them lizard tails (and writing "no tail" added tails), and Lantern Abbey printed its description as a caption until it was told not to. The game shows a clean placeholder for any card without art.

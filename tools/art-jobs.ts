@@ -31,6 +31,22 @@ const cardScenes: Record<string, string> = {
   guard: 'a battered round shield on a stone floor', move: 'boots striding across a stone floor',
 };
 for (const [id, scene] of Object.entries(cardScenes)) jobs.push({ kind: 'cardtype', id, prompt: `${STYLE}, a card illustration of ${scene}, centred, dark background, no text`, w: 512, h: 384, seed: seed++ });
+// Re-rolls after checking the contact sheets. "a monster" in the prompt gave humanoid enemies lizard tails, and
+// writing "no tail" made it worse, so humanoids are named as a human foe instead. One region printed its text as a caption.
+const REROLL: Record<string, { seed: number; human?: boolean; as?: string; add?: string }> = {
+  'blind-templar': { seed: 2001, human: true }, herald: { seed: 2002, human: true }, penitent: { seed: 1003, human: true },
+  'shield-sergeant': { seed: 1004, human: true }, 'story-pitmaster': { seed: 2005, human: true }, 'story-usurper': { seed: 2006, human: true },
+  'story-warden': { seed: 3007, as: 'a towering carved stone statue that walks' }, 'light-eater': { seed: 1008 }, 'forgeborn-knight': { seed: 2009, human: true },
+  've-town': { seed: 1010, add: ', no lettering, no caption, no border' },
+};
+for (const j of jobs) {
+  const r = REROLL[j.id];
+  if (!r) continue;
+  j.seed = r.seed;
+  if (r.human) j.prompt = j.prompt.replace(/an enemy battle sprite, [^:]+:/, 'an enemy battle sprite of a human foe on two booted feet:');
+  if (r.as) j.prompt = j.prompt.replace(/an enemy battle sprite, [^:]+:/, `an enemy battle sprite, ${r.as}:`);
+  if (r.add) j.prompt = j.prompt.replace(/([,.]) (full body|Wide landscape)/, `${r.add}$1 $2`);
+}
 mkdirSync('art-masters/hf', { recursive: true });
 writeFileSync('art-masters/hf/jobs.json', JSON.stringify(jobs, null, 1));
 console.log(jobs.length, 'jobs');
