@@ -1,0 +1,45 @@
+{
+ "style": "16-bit era pixel art illustration in the manner of a mid-1990s console role-playing game battle scene, drawn at a low resolution of about 256 by 224 and shown enlarged, dense hand-placed pixel detail, dithered shading, a limited palette of deep greens, blues and purples with warm highlights, three-quarter overhead view, stone block walls and glazed tile floors drawn tile by tile, crisp pixel edges, wordless and untitled, full-bleed",
+ "items": [
+  {
+   "id": "monster-harrower",
+   "aspect": "3:2",
+   "scene": "a winged fiend with a pale human face and short lilac hair, broad green and crimson bat wings, a lean purple-scaled body, red clawed hands and talons, lunging through the air with claws forward over an emerald glazed tile floor beside a grey stone block wall with blue flowering vines"
+  },
+  {
+   "id": "hero-serin",
+   "aspect": "3:2",
+   "scene": "a knight with wild auburn hair, blue tabard over steel plate, crimson chest emblem, longsword held low, on a dark green cobblestone floor",
+   "figure": true
+  },
+  {
+   "id": "place-moonlit-rooftop",
+   "aspect": "3:2",
+   "scene": "a fortress rooftop of green glazed tiles with round towers capped in copper under a full moon, layered blue night clouds, a steep stone stair climbing the wall, a winged beast with a rider wheeling in the sky"
+  },
+  {
+   "id": "tech-crescent-cut",
+   "aspect": "3:2",
+   "scene": "a knight with wild auburn hair in a blue tabard leaping, longsword trailing a pale blue crescent of light and yellow sparks, over a dark cobblestone floor",
+   "figure": true
+  },
+  {
+   "id": "evil-drowned-king",
+   "aspect": "3:2",
+   "scene": "a towering drowned king on a throne of coral and broken ship timbers, bloated grey-green flesh, a rusted crown, seaweed hair, a long rotten cloak, glowing pale eyes, seated in a flooded stone hall with green water at the knees, far larger than a man"
+  },
+  {
+   "id": "scene-town-square",
+   "aspect": "3:2",
+   "figure": true,
+   "scene": "a swordsman with spiky auburn hair in a green tunic and a woman in a red and white dress standing in a cobblestone town square, a stone fountain, timber-framed houses, a castle wall with towers behind, iron lamp posts"
+  },
+  {
+   "id": "scene-courtyard-battle",
+   "aspect": "3:2",
+   "figure": true,
+   "scene": "two swordsmen and a staff-bearing mage in a row facing a large winged fiend across an emerald glazed tile courtyard, stone block walls with blue flowering vines, battle stances"
+  }
+ ],
+ "figure": "figures about a fifth of the image height, three head-heights tall, big hair, solid dark eyes, large hands, boots, dark outlines, flat shading"
+}

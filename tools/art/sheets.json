@@ -1,0 +1,426 @@
+{
+ "bible": "art-masters/gemini/heroes-sheet-1.png",
+ "style": "Using exactly the art style, pixel density, proportions, dark outlines and shading of the attached character sheet (16-bit pixel art of a mid-1990s console role-playing game),",
+ "key": "The background is flat solid magenta #FF00FF everywhere, with no floor, pedestal, shadow, frame, border, title, label, number or text of any kind.",
+ "grid": "Each panel is a full painted scene filling its cell edge to edge, separated from its neighbours by straight black gutters, with no frame, border, title, label, number or text of any kind.",
+ "sheets": [
+  {
+   "id": "heroes",
+   "aspect": "16:9",
+   "mode": "key",
+   "lead": "draw these eight characters again as a clean sheet: the same faces, hair, outfits and weapons as in the attached sheet, each in a three-quarter view facing left in a ready battle stance, full body, arranged in an even grid of 4 columns and 2 rows with wide empty gutters, each one whole and not touching the others or the edges.",
+   "items": [
+    [
+     "serin",
+     "Top row, first: a young knight with short brown hair in silver plate armour and a blue tabard, holding a longsword."
+    ],
+    [
+     "oda",
+     "Top row, second: a woman with long wild black hair in a crimson coat over bronze armour, a greatsword over her shoulder."
+    ],
+    [
+     "tamsin",
+     "Top row, third: a ranger with a long auburn braid in a green hood and leathers, drawing a bow."
+    ],
+    [
+     "hollis",
+     "Top row, fourth: a bearded man in a fur-collared brown cloak and leather armour, holding a tall spear with a cloth banner."
+    ],
+    [
+     "ketteran",
+     "Bottom row, first: a broad bearded shipwright in a blue bandana and leather harness, a heavy double-bladed axe on his shoulder."
+    ],
+    [
+     "ismet",
+     "Bottom row, second: a lean fighter with messy dark hair in a white sleeveless top and dark trousers, wrapped fists raised."
+    ],
+    [
+     "yune",
+     "Bottom row, third: a seer with long dark hair in white and gold robes, holding a glowing slender sword."
+    ],
+    [
+     "garrick",
+     "Bottom row, fourth: a hard-faced man in a black hood and dark mail, holding a dark greatsword low."
+    ]
+   ]
+  },
+  {
+   "id": "evils",
+   "aspect": "16:9",
+   "mode": "key",
+   "lead": "draw five huge boss monsters, each far larger and more detailed than a person, arranged as 3 in the top row and 2 in the bottom row with wide empty gutters, each one whole and not touching the others or the edges, facing right.",
+   "items": [
+    [
+     "ashen-tyrant",
+     "The Ashen Tyrant: a towering armoured warlord of black iron and glowing forge cracks, a crown of chains, a burning hammer."
+    ],
+    [
+     "drowned-king",
+     "The Drowned King: a bloated grey-green corpse king in a rusted crown, seaweed hair, a coral and timber throne, pale glowing eyes."
+    ],
+    [
+     "thousand-eyed-court",
+     "The Thousand-Eyed Court: a floating masked figure in layered violet robes covered in open eyes, ribbons of illusion around it."
+    ],
+    [
+     "hollow-saint",
+     "The Hollow Saint: a tall empty saint's robe with a cracked golden halo and no face, pale corrupted light spilling from inside."
+    ],
+    [
+     "iron-horde",
+     "The Iron Horde: a giant war-beast of riveted iron plates ridden by a horned warlord, banners and spears bristling from its back."
+    ]
+   ]
+  },
+  {
+   "id": "lieutenants",
+   "aspect": "16:9",
+   "mode": "key",
+   "lead": "draw five elite monsters, each about twice the height of a person, arranged as 3 in the top row and 2 in the bottom row with wide empty gutters, each one whole and not touching the others or the edges, facing right.",
+   "items": [
+    [
+     "smith-of-chains",
+     "The Smith of Chains: a hunched giant blacksmith with an anvil-shaped head, chains wrapped round both arms, glowing coals in his chest."
+    ],
+    [
+     "tidewarden",
+     "The Tidewarden: a drowned knight in barnacled plate holding a trident, water pouring from the joints of his armour."
+    ],
+    [
+     "herald",
+     "The Herald: a thin jester-herald in violet and gold with a long trumpet and a smiling mask, a second face on the back of its head."
+    ],
+    [
+     "penitent",
+     "The Penitent: a kneeling armoured flagellant with a cage over its head and a censer of pale fire, scourges hanging from its belt."
+    ],
+    [
+     "warlord",
+     "The Warlord: a huge horned warrior in spiked iron armour with a tower shield and a heavy cleaver."
+    ]
+   ]
+  },
+  {
+   "id": "gear",
+   "aspect": "1:1",
+   "mode": "key",
+   "lead": "draw sixteen separate item icons laid flat, arranged in an even grid of 4 columns and 4 rows with wide empty gutters, each one whole and not touching the others or the edges.",
+   "items": [
+    [
+     "iron-sword",
+     "A plain iron sword."
+    ],
+    [
+     "wintermark",
+     "Wintermark, a pale steel sword with a frost-blue blade and a silver guard."
+    ],
+    [
+     "iron-greatsword",
+     "A plain iron greatsword."
+    ],
+    [
+     "black-greatsword",
+     "A black greatsword with violet runes."
+    ],
+    [
+     "hand-axe",
+     "A plain hand axe."
+    ],
+    [
+     "anchor-axe",
+     "A heavy axe whose head is a barnacled ship's anchor."
+    ],
+    [
+     "iron-spear",
+     "A plain iron spear."
+    ],
+    [
+     "banner-spear",
+     "A spear with a long cloth banner."
+    ],
+    [
+     "short-bow",
+     "A short wooden bow."
+    ],
+    [
+     "longbow",
+     "A tall longbow of dark yew with a green grip."
+    ],
+    [
+     "wrapped-fists",
+     "A pair of cloth hand wraps."
+    ],
+    [
+     "iron-knuckles",
+     "A pair of iron knuckle gauntlets."
+    ],
+    [
+     "herb",
+     "A bundle of green healing herbs tied with string."
+    ],
+    [
+     "antidote",
+     "A small glass vial of green antidote."
+    ],
+    [
+     "phoenix-feather",
+     "A glowing red and gold phoenix feather."
+    ],
+    [
+     "letter-from-home",
+     "A folded letter with a red wax seal."
+    ]
+   ]
+  },
+  {
+   "id": "techs-1",
+   "aspect": "3:2",
+   "mode": "grid",
+   "grid": "2x2",
+   "lead": "draw four battle panels in an even grid of 2 columns and 2 rows, each panel landscape, using the same characters as the attached sheet.",
+   "items": [
+    [
+     "cross-slash",
+     "Top left, Cross Slash: the young knight in silver plate cuts twice in an X of pale blue light across a monster, in a stone dungeon."
+    ],
+    [
+     "skewer",
+     "Top right, Skewer: the bearded spearman lunges, his spear running through two monsters in a row, on a grassy hillside."
+    ],
+    [
+     "rain-of-arrows",
+     "Bottom left, Rain of Arrows: the hooded ranger looses a volley that falls as a storm of arrows on a pack of wolves, in a forest clearing."
+    ],
+    [
+     "fire-wall",
+     "Bottom right, Fire Wall: the white-robed seer raises a hand and a wall of flame rises between the heroes and charging monsters, in a ruined hall."
+    ]
+   ]
+  },
+  {
+   "id": "spells-1",
+   "aspect": "3:2",
+   "mode": "grid",
+   "grid": "2x2",
+   "lead": "draw four battle panels in an even grid of 2 columns and 2 rows, each panel landscape, using the same characters as the attached sheet.",
+   "items": [
+    [
+     "mending-rain",
+     "Top left, Mending Rain: soft glowing blue rain falls on four wounded heroes, closing their wounds, on a stone bridge."
+    ],
+    [
+     "stone-skin",
+     "Top right, Stone Skin: the broad bearded axeman's skin turns to grey stone as a monster's claws glance off him, in a cave."
+    ],
+    [
+     "imperial-wedge",
+     "Bottom left, Imperial Wedge: four heroes in a wedge formation, the armoured knight at the point with shield raised, on an open field."
+    ],
+    [
+     "tortoise",
+     "Bottom right, Tortoise: four heroes crouched close behind locked shields as arrows rain down on them, at a castle gate."
+    ]
+   ]
+  },
+  {
+   "id": "monsters-ash",
+   "aspect": "16:9",
+   "mode": "key",
+   "lead": "draw eight monsters from The Ash Steps, the domain of The Ashen Tyrant, each full body, facing right, in a ready battle pose, each at its stated size relative to a person, arranged in an even grid of 4 columns and 2 rows with wide empty gutters, each one whole and not touching the others or the edges.",
+   "items": [
+    [
+     "cinder-imp",
+     "Top row, first, the Cinder Imp: a knee-high horned imp of black coal with ember eyes, small, about knee-high to a person."
+    ],
+    [
+     "slag-hound",
+     "Top row, second, the Slag Hound: a hound of cooling slag with glowing orange cracks, about the height of a person."
+    ],
+    [
+     "chain-thrall",
+     "Top row, third, the Chain Thrall: a shackled soldier in forge-scarred armour swinging a length of chain, about the height of a person."
+    ],
+    [
+     "bellows-toad",
+     "Top row, fourth, the Bellows Toad: a huge warty toad with a leather bellows throat, about the height of a person."
+    ],
+    [
+     "ash-wraith",
+     "Bottom row, first, the Ash Wraith: a drifting hooded figure of grey ash and floating embers, about the height of a person."
+    ],
+    [
+     "furnace-golem",
+     "Bottom row, second, the Furnace Golem: a walking furnace of brick and iron with a glowing door for a mouth, large, about twice the height of a person."
+    ],
+    [
+     "pyre-drake",
+     "Bottom row, third, the Pyre Drake: a wingless red drake with molten scales and a smoking snout, large, about twice the height of a person."
+    ],
+    [
+     "forgeborn-knight",
+     "Bottom row, fourth, the Forgeborn Knight: a tall knight hammered from one piece of black iron, flames behind the visor, large, about twice the height of a person."
+    ]
+   ]
+  },
+  {
+   "id": "monsters-salt",
+   "aspect": "16:9",
+   "mode": "key",
+   "lead": "draw eight monsters from Saltmarch, the domain of The Drowned King, each full body, facing right, in a ready battle pose, each at its stated size relative to a person, arranged in an even grid of 4 columns and 2 rows with wide empty gutters, each one whole and not touching the others or the edges.",
+   "items": [
+    [
+     "bilge-rat",
+     "Top row, first, the Bilge Rat: a bloated grey rat crusted with barnacles, small, about knee-high to a person."
+    ],
+    [
+     "drowned-sailor",
+     "Top row, second, the Drowned Sailor: a pale waterlogged sailor in a torn striped shirt with a boathook, about the height of a person."
+    ],
+    [
+     "mire-crab",
+     "Top row, third, the Mire Crab: a giant mud crab whose shell is a piece of ship hull, about the height of a person."
+    ],
+    [
+     "kelp-strangler",
+     "Top row, fourth, the Kelp Strangler: a tangle of dripping kelp with a skull inside, about the height of a person."
+    ],
+    [
+     "figurehead-siren",
+     "Bottom row, first, the Figurehead Siren: a pale singing woman fused to a broken ship figurehead, about the height of a person."
+    ],
+    [
+     "lantern-angler",
+     "Bottom row, second, the Lantern Angler: a deep-sea fish with a glowing lantern lure and needle teeth, large, about twice the height of a person."
+    ],
+    [
+     "tide-serpent",
+     "Bottom row, third, the Tide Serpent: a sea serpent with green scales and a ragged fin crest, large, about twice the height of a person."
+    ],
+    [
+     "bell-revenant",
+     "Bottom row, fourth, the Bell Revenant: a drowned priest carrying a cracked ship bell on a chain, large, about twice the height of a person."
+    ]
+   ]
+  },
+  {
+   "id": "monsters-reach",
+   "aspect": "16:9",
+   "mode": "key",
+   "lead": "draw eight monsters from The Reaches, the domain of The Thousand-Eyed Court, each full body, facing right, in a ready battle pose, each at its stated size relative to a person, arranged in an even grid of 4 columns and 2 rows with wide empty gutters, each one whole and not touching the others or the edges.",
+   "items": [
+    [
+     "wisp",
+     "Top row, first, the Will-o'-Wisp: a floating pale light with a faint face inside, small, about knee-high to a person."
+    ],
+    [
+     "changeling",
+     "Top row, second, the Changeling: a grey child-shaped creature with a blank smooth face, about the height of a person."
+    ],
+    [
+     "moth-courtier",
+     "Top row, third, the Moth Courtier: a person-sized moth in a ruffled velvet coat, about the height of a person."
+    ],
+    [
+     "mirror-knight",
+     "Top row, fourth, the Mirror Knight: a knight in mirror-polished armour that shows distorted reflections, about the height of a person."
+    ],
+    [
+     "masked-stag",
+     "Bottom row, first, the Masked Stag: a great white stag whose antlers are hung with porcelain masks, large, about twice the height of a person."
+    ],
+    [
+     "name-thief",
+     "Bottom row, second, the Name Thief: a cloaked figure carrying a sack that spills glowing letters, about the height of a person."
+    ],
+    [
+     "eye-swarm",
+     "Bottom row, third, the Eye Swarm: a cluster of floating eyes trailing red threads, about the height of a person."
+    ],
+    [
+     "masked-duelist",
+     "Bottom row, fourth, the Masked Duelist: a fencer in a porcelain mask and long violet coat with a rapier, about the height of a person."
+    ]
+   ]
+  },
+  {
+   "id": "monsters-veil",
+   "aspect": "16:9",
+   "mode": "key",
+   "lead": "draw eight monsters from The Veil, the domain of The Hollow Saint, each full body, facing right, in a ready battle pose, each at its stated size relative to a person, arranged in an even grid of 4 columns and 2 rows with wide empty gutters, each one whole and not touching the others or the edges.",
+   "items": [
+    [
+     "candle-wight",
+     "Top row, first, the Candle Wight: a walking melted candle with a pale flame for a head, small, about knee-high to a person."
+    ],
+    [
+     "pilgrim-husk",
+     "Top row, second, the Pilgrim Husk: an emptied pilgrim in grey rags holding a dim lantern, about the height of a person."
+    ],
+    [
+     "gilded-seraph",
+     "Top row, third, the Gilded Seraph: a winged statue of cracked gilt with a blank golden face, about the height of a person."
+    ],
+    [
+     "weeping-statue",
+     "Top row, fourth, the Weeping Statue: a stone saint with black tears running down its face, about the height of a person."
+    ],
+    [
+     "censer-bearer",
+     "Bottom row, first, the Censer Bearer: a hooded acolyte swinging a censer of pale smoke, about the height of a person."
+    ],
+    [
+     "light-eater",
+     "Bottom row, second, the Light Eater: a pale eyeless worm with a mouth full of light, large, about twice the height of a person."
+    ],
+    [
+     "reliquary-beast",
+     "Bottom row, third, the Reliquary Beast: a beast built from a gilded reliquary box on long bone legs, large, about twice the height of a person."
+    ],
+    [
+     "blind-templar",
+     "Bottom row, fourth, the Blind Templar: a towering knight with a white-bandaged face and a blade of light, large, about twice the height of a person."
+    ]
+   ]
+  },
+  {
+   "id": "monsters-march",
+   "aspect": "16:9",
+   "mode": "key",
+   "lead": "draw eight monsters from The Marches, the domain of The Iron Horde, each full body, facing right, in a ready battle pose, each at its stated size relative to a person, arranged in an even grid of 4 columns and 2 rows with wide empty gutters, each one whole and not touching the others or the edges.",
+   "items": [
+    [
+     "conscript",
+     "Top row, first, the Conscript: a frightened foot soldier in a dented helm holding a pike, about the height of a person."
+    ],
+    [
+     "war-dog",
+     "Top row, second, the War Dog: a scarred mastiff in spiked leather barding, small, about knee-high to a person."
+    ],
+    [
+     "shield-sergeant",
+     "Top row, third, the Shield Sergeant: a broad soldier behind a tall iron tower shield, about the height of a person."
+    ],
+    [
+     "crossbow-pair",
+     "Top row, fourth, the Crossbow Pair: two crossbowmen in iron caps kneeling side by side, about the height of a person."
+    ],
+    [
+     "siege-ogre",
+     "Bottom row, first, the Siege Ogre: a huge chained ogre carrying a battering ram, large, about twice the height of a person."
+    ],
+    [
+     "horde-drummer",
+     "Bottom row, second, the Horde Drummer: a skull-masked drummer with a great war drum, about the height of a person."
+    ],
+    [
+     "iron-cavalier",
+     "Bottom row, third, the Iron Cavalier: a horned rider on a horse in heavy iron barding, large, about twice the height of a person."
+    ],
+    [
+     "banner-champion",
+     "Bottom row, fourth, the Banner Champion: a giant champion carrying the Horde's iron banner, large, about twice the height of a person."
+    ]
+   ]
+  }
+ ]
+}

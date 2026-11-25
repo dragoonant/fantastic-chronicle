@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chronicle Art Samples</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  body{background:#14141c;color:#d8d8e0;font-family:system-ui,sans-serif;margin:0;padding:24px 16px 64px}
+  h1{font-size:20px;font-weight:600;margin:0 0 4px}
+  h2{font-size:15px;font-weight:600;margin:44px 0 12px;color:#9ab}
+  .sub{font-size:13px;color:#889;margin:0 0 8px}
+  .row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+  canvas{image-rendering:pixelated;image-rendering:crisp-edges;display:block;background:#000}
+  figure{margin:0}
+  figcaption{font-size:12px;color:#99a;margin-top:6px;max-width:336px;line-height:1.4}
+  .note{font-size:13px;color:#aab;max-width:760px;line-height:1.55}
+  .sw{display:flex;flex-wrap:wrap;gap:10px}
+  .sw div{width:72px;font-size:10px;color:#99a;text-align:center}
+  .sw span{display:block;height:40px;border:1px solid #333;margin-bottom:3px}
+</style>
+</head>
+<body>
+<h1>Fantastic Chronicle — Art Direction Samples v0.1</h1>
+<p class="sub">Every image below is drawn at SNES resolution from indexed pixel data, then scaled by a whole number with no smoothing. Nothing is a photograph of the real game; all art is original.</p>
+
+<h2>1. Hero sprite palette (15 colors + transparent)</h2>
+<p class="note">One 4bpp palette per sprite, as on the SNES. Colors are kept to the SNES 5-bit-per-channel grid (multiples of 8). A palette swap of the same sprite produces a second hero, which is how the eight protagonists and their successors can share animation frames.</p>
+<div class="sw" id="pal"></div>
+
+<h2>2. Card samples, one per card type</h2>
+<p class="note">Cards are 112×144 pixels. Blue gradient window with a white, grey and dark bevel. A colored strip under the name marks the card type. Art window is 96×48. Below it: weapon or school icon, tier pips, cost. Combo links are shown as open and filled shapes so they stay readable without color. Text is an 8×8 bitmap font, 12 characters per line.</p>
+<div class="row" id="cards"></div>
+
+<h2>3. Battle screen mockup, 256×224</h2>
+<p class="note">Side view. Enemies on the left with intent icons above them. Heroes on the right. The status strip and hand window are standard blue windows. The selected card rises four pixels and the cursor points at it. The glimmer bubble over the lead hero marks a spark this round.</p>
+<div class="row" id="battle"></div>
+
+<h2>4. Sprite sheet</h2>
+<p class="note">Hero battle sprite at 32×48, about three head-heights, head roughly one third of the height. Shown at 1×, 3× and 6×, then as a palette swap. Enemy sprite is 32×40. Icons are 16×16. Glimmer bubble is 8×11.</p>
+<div class="row" id="sheet"></div>
+
+<script>
+// ---------- tiny helpers ----------
+function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function px(c,x,y,col){c.fillStyle=col;c.fillRect(x,y,1,1);}
+function rect(c,x,y,w,h,col){c.fillStyle=col;c.fillRect(x,y,w,h);}
+function frame1(c,x,y,w,h,col){c.fillStyle=col;c.fillRect(x,y,w,1);c.fillRect(x,y+h-1,w,1);c.fillRect(x,y,1,h);c.fillRect(x+w-1,y,1,h);}
+function sprite(c,x,y,rows,pal){rows.forEach((r,j)=>{for(let i=0;i<r.length;i++){const ch=r[i];if(ch==='.'||ch===' ')continue;const col=pal[ch];if(col)px(c,x+i,y+j,col);}});}
+// banded vertical gradient with a one-row checker dither at each band boundary
+function vgrad(c,x,y,w,h,stops){
+  const n=stops.length;
+  for(let j=0;j<h;j++){
+    const t=j/h; const f=t*n; const b=Math.min(n-1,Math.floor(f)); const frac=f-b;
+    for(let i=0;i<w;i++){
+      let col=stops[b];
+      if(frac>0.72&&b<n-1&&((i+j)&1)) col=stops[b+1];
+      px(c,x+i,y+j,col);
+    }
+  }
+}
+const WIN=['#2838a0','#202c84','#182068','#101850','#0c1040'];
+function win(c,x,y,w,h,fill){
+  vgrad(c,x,y,w,h,fill||WIN);
+  frame1(c,x,y,w,h,'#f8f8f8');
+  frame1(c,x+1,y+1,w-2,h-2,'#a8a8c0');
+  frame1(c,x+2,y+2,w-4,h-4,'#282850');
+}
+function text(c,s,x,y,col,shadow){
+  c.font='8px "Press Start 2P"';c.textBaseline='top';
+  c.fillStyle=shadow||'#101020';c.fillText(s,x+1,y+1);
+  c.fillStyle=col||'#f8f8f8';c.fillText(s,x,y);
+}
+function show(parent,w,h,scale,draw,caption){
+  const off=document.createElement('canvas');off.width=w;off.height=h;
+  const c=off.getContext('2d');draw(c);
+  const vis=document.createElement('canvas');vis.width=w*scale;vis.height=h*scale;vis.style.width=(w*scale)+'px';vis.style.height=(h*scale)+'px';
+  const v=vis.getContext('2d');v.imageSmoothingEnabled=false;v.drawImage(off,0,0,w*scale,h*scale);
+  const fig=document.createElement('figure');fig.appendChild(vis);
+  if(caption){const fc=document.createElement('figcaption');fc.textContent=caption;fig.appendChild(fc);}
+  parent.appendChild(fig);
+}
+
+// ---------- palettes ----------
+const HERO={
+  o:'#101030', s:'#f0b088', S:'#c07858', h:'#c04820', H:'#782810',
+  m:'#e0e8f8', M:'#8890b8', d:'#505878', c:'#3858c8', C:'#203088',
+  r:'#c82828', b:'#604028', w:'#ffffff', g:'#f0c840'
+};
+const HERO_NAMES={o:'outline',s:'skin',S:'skin shade',h:'hair',H:'hair shade',m:'steel light',M:'steel',d:'steel dark',c:'cloth',C:'cloth shade',r:'emblem',b:'leather',w:'highlight',g:'gold'};
+const HERO2={...HERO, h:'#303040', H:'#181820', c:'#c83030', C:'#801818', r:'#f0c840', s:'#d89068', S:'#a86848'};
+const ICON={
+  w:'#ffffff', m:'#c8d0e8', o:'#282840', g:'#f0c840', b:'#604028',
+  r:'#d83020', O:'#f08828', y:'#f8d848', Y:'#fff8c8',
+  R:'#e03848', B:'#3858c8', p:'#f0e0b0', P:'#584020', s:'#f8d848', M:'#8890b8'
+};
+const IC_SHIELD=[
+"..oooooooooo....",
+".oMmmmmmmmmMo...",
+".oMmmwwwmmmMo...",
+".oMmmwwwmmmMo...",
+".oMmmmmmmmmMo...",
+".oMMMMMMMMMMo...",
+".oMMBBBBBBMMo...",
+".oMMBBBBBBMMo...",
+"..oMMBBBBMMo....",
+"..oMMBBBBMMo....",
+"...oMMBBMMo.....",
+"...oMMBBMMo.....",
+"....oMMMMo......",
+".....oMMo.......",
+"......oo........",
+"................"];
+
+// ---------- hero sprite 32x48 ----------
+const KNIGHT=[
+"............ooooo...............",
+"..........oohhhhhoo.............",
+".........ohhhhhhhhho............",
+".........ohhhhhhhhhho...........",
+"........ohhhhHhhhhhho...........",
+"........ohhhHHhhhhhhho..........",
+"........ohhHHHhhhhhhho..........",
+"........ohHHsssssHhhho..........",
+"........oHHssssssSHhho..........",
+"........oHssossssSSHho..........",
+"........oHssossssSSHho..........",
+".........ossssssSSSHo...........",
+".........oSsssssSSoo............",
+"..........oSSssSSo..............",
+"...........ooSSoo...............",
+"..........ommoooommo............",
+".........ommMMMMMMmmo...........",
+"........ommMMccccMMMmmo.........",
+"........omMMccccccMMMmo.........",
+"........oMMMccrrccMMMdo.........",
+"........oMdMccrrccMMdMo.........",
+"........oMdoCccccCoMdMo.........",
+"........oMdoCCccCCoMdMo.........",
+".......oMMdoCCCCCCoMMdo.........",
+".......oMdooCCCCCCooMdo.........",
+".......oddooCCCCCCooddo.........",
+"........ooooCCCCCCoooo..........",
+"..........oCCCCCCCCo............",
+"..........oCCCCCCCCo............",
+".........oCCCCCCCCCCo...........",
+".........oCccCCCCccCo...........",
+".........oCCCCCCCCCCo...........",
+".........oooooooooooo...........",
+".........odddooodddo............",
+".........oMMdo.oMMdo............",
+".........oMMdo.oMMdo............",
+".........oMMdo.oMMdo............",
+".........oMMdo.oMMdo............",
+".........oMMdo.oMMdo............",
+".........oddgo.oddgo............",
+".........obbbo.obbbo............",
+".........obbbo.obbbo............",
+"........obbbbo.obbbbo...........",
+".......obbbbbo.obbbbbo..........",
+"......obbbbbbo..obbbbbo.........",
+"......obbbbbbo..obbbbbbo........",
+"......oooooooo..oooooooo........",
+"................................"
+].map(r=>r.split(''));
+function setc(rows,y,x,ch){if(y<0||y>=rows.length||x<0||x>=32)return;rows[y][x]=ch;}
+// sword held in the near hand, blade up and to the left
+for(let k=0;k<=10;k++){const y=23-k;const x=6-Math.floor(k/2);setc(KNIGHT,y,x-1,'o');setc(KNIGHT,y,x,'w');setc(KNIGHT,y,x+1,'M');setc(KNIGHT,y,x+2,'o');}
+setc(KNIGHT,12,1,'w');setc(KNIGHT,12,0,'o');setc(KNIGHT,12,2,'o');setc(KNIGHT,11,1,'o');
+for(let x=3;x<=9;x++)setc(KNIGHT,24,x,'g');setc(KNIGHT,24,2,'o');setc(KNIGHT,24,10,'o');setc(KNIGHT,23,3,'o');setc(KNIGHT,25,3,'o');
+setc(KNIGHT,25,6,'s');setc(KNIGHT,25,7,'s');setc(KNIGHT,26,6,'s');setc(KNIGHT,26,7,'S');setc(KNIGHT,25,5,'o');setc(KNIGHT,26,5,'o');setc(KNIGHT,27,6,'o');setc(KNIGHT,27,7,'o');setc(KNIGHT,26,8,'o');
+const KNIGHT_ROWS=KNIGHT.map(r=>r.join(''));
+
+// ---------- glimmer bubble 8x11 ----------
+const GLIM=[
+"..oooo..",
+".oyyyyo.",
+"oyyYYyyo",
+"oyYYYYyo",
+"oyyYYyyo",
+".oyyyyo.",
+"..oyyo..",
+"...oo...",
+"........",
+"...yy...",
+"...yy..."];
+const GLIMPAL={o:'#403010',y:'#f8d848',Y:'#fff8c8'};
+
+// ---------- icons 16x16 ----------
+const IC_SWORD=[
+"...............w",
+"..............wm",
+".............wmo",
+"............wmo.",
+"...........wmo..",
+"..........wmo...",
+".........wmo....",
+"........wmo.....",
+".......wmo......",
+"..gg..wmo.......",
+"...gggmo........",
+"....ggo.........",
+"...gbgg.........",
+"..bb..gg........",
+".bb.............",
+"bb.............."];
+const IC_FIRE=[
+"................",
+".......r........",
+"......rr........",
+"......rr.r......",
+".....rrrrr......",
+"....rrOrrr......",
+"....rOOOrrr.....",
+"...rrOyOOrr.....",
+"...rOyyyOrrr....",
+"..rrOyyyyOrr....",
+"..rOyyYyyOrr....",
+"..rOyyYYyOrr....",
+"..rrOyyyyOrr....",
+"...rOOyyOOrr....",
+"....rrOOOrr.....",
+".....rrrrr......"];
+const IC_HEART=[
+"................",
+"..ooo....ooo....",
+".oRRRo..oRRRo...",
+"oRRRRRooRRRRRo..",
+"oRwRRRRRRRRRRo..",
+"oRRRRRRRRRRRRo..",
+"oRRRRRRRRRRRRo..",
+".oRRRRRRRRRRo...",
+"..oRRRRRRRRo....",
+"...oRRRRRRo.....",
+"....oRRRRo......",
+".....oRRo.......",
+"......oo........",
+"................"];
+const IC_FORM=[
+"................",
+"......oo........",
+".....oBBo.......",
+".....oBBo.......",
+"......oo........",
+"..oo......oo....",
+".oBBo....oBBo...",
+".oBBo....oBBo...",
+"..oo......oo....",
+"................",
+"....wwwwwwww....",
+"....w......w....",
+"....wwwwwwww....",
+"................"];
+const IC_SCROLL=[
+"..PPPPPPPPPP....",
+".PppppppppppP...",
+".PpPPPPPPPPppP..",
+".PppppppppppppP.",
+".PpPPPPPPPPpppP.",
+".PppppppppppppP.",
+".PpPPPPPPPPppP..",
+".PppppppppppP...",
+".PppppppppppP...",
+".PpPPPPPPPPppP..",
+".PppppppppppppP.",
+"..PPPPPPPPPPPPP.",
+"................"];
+const IC_STAR=[
+".......s........",
+".......s........",
+"......sss.......",
+"......sss.......",
+"sssssssYsssssss.",
+".ssssssYsssss...",
+"...ssssYssss....",
+"....sssssss.....",
+"....sss.sss.....",
+"...sss...sss....",
+"..ss.......ss...",
+"................"];
+
+// ---------- enemy: tide wraith 32x40, procedural ----------
+function wraith(c,x0,y0,seed){
+  const r=rng(seed);
+  const col={out:'#0c2830',dark:'#1c5850',mid:'#30907c',light:'#70d8b8',hole:'#061418',eye:'#f8e860'};
+  const noise=[];for(let i=0;i<32;i++)noise.push(Math.round(r()*3));
+  const inside=(x,y)=>{
+    const cx=15.5;
+    let hw;
+    if(y<14){const t=(14-y)/14;hw=Math.sqrt(Math.max(0,1-t*t))*11;}else hw=11+(y-14)*0.12;
+    if(Math.abs(x-cx)>hw)return false;
+    const bottom=33+Math.round(2*Math.sin(x*1.1))+noise[x];
+    if(y>bottom)return false;
+    return true;
+  };
+  for(let y=0;y<40;y++)for(let x=0;x<32;x++){
+    if(!inside(x,y))continue;
+    const edge=!inside(x-1,y)||!inside(x+1,y)||!inside(x,y-1)||!inside(x,y+1);
+    // face hole, hood opening faces right
+    const fx=(x-19)/6,fy=(y-13)/7;
+    if(y<19&&fx*fx+fy*fy<1){px(c,x0+x,y0+y,col.hole);continue;}
+    if(edge){px(c,x0+x,y0+y,col.out);continue;}
+    // shading: light from upper left, with dither
+    const sh=(x-4)/24+(y)/60;
+    let k; if(sh<0.35)k=col.light; else if(sh<0.5)k=((x+y)&1)?col.light:col.mid; else if(sh<0.75)k=col.mid; else if(sh<0.88)k=((x+y)&1)?col.mid:col.dark; else k=col.dark;
+    px(c,x0+x,y0+y,k);
+  }
+  rect(c,x0+17,y0+12,2,2,col.eye);rect(c,x0+21,y0+12,2,2,col.eye);
+  px(c,x0+17,y0+12,'#fffff0');px(c,x0+21,y0+12,'#fffff0');
+}
+
+// ---------- card art generators (96x48) ----------
+function artSlash(c,x,y){
+  vgrad(c,x,y,96,48,['#101838','#0c1028','#080818','#040410']);
+  const r=rng(7);
+  const streak=(x1,y1,x2,y2)=>{
+    const n=Math.max(Math.abs(x2-x1),Math.abs(y2-y1));
+    for(let i=0;i<=n;i++){const t=i/n;const sx=Math.round(x1+(x2-x1)*t),sy=Math.round(y1+(y2-y1)*t);
+      const w=Math.sin(t*Math.PI);const half=Math.round(w*2.6);
+      for(let k=-half-1;k<=half+1;k++){const yy=sy+k;if(yy<0||yy>47)continue;const col=Math.abs(k)<=half*0.4?'#ffffff':(Math.abs(k)<=half?'#90e0ff':'#3870c0');px(c,x+sx,y+yy,col);}
+    }};
+  streak(6,40,88,8);streak(10,10,86,42);
+  for(let i=0;i<22;i++){const sx=Math.floor(r()*96),sy=Math.floor(r()*48);px(c,x+sx,y+sy,r()<0.5?'#f8e860':'#ffffff');}
+}
+function artFire(c,x,y){
+  vgrad(c,x,y,96,48,['#080408','#180808','#300c08','#401008']);
+  const r=rng(3);
+  for(let i=0;i<96;i++){
+    const h=18+Math.round(Math.sin(i*0.35)*6+Math.sin(i*0.9+1)*4+r()*6);
+    for(let k=0;k<h;k++){const f=k/h;const yy=47-k;
+      if(f>0.65&&r()<(f-0.65)*2.2)continue;
+      const col=f<0.22?'#fff8c8':f<0.45?'#f8d848':f<0.7?'#f08828':f<0.88?'#d83020':'#801818';
+      px(c,x+i,y+yy,col);}
+  }
+  for(let i=0;i<14;i++)px(c,x+Math.floor(r()*96),y+Math.floor(r()*22),'#f8d848');
+}
+function artBlade(c,x,y){
+  vgrad(c,x,y,96,48,['#406898','#5880b0','#7098c8','#90b8d8','#b0d0e8']);
+  const r=rng(11);
+  for(let i=0;i<60;i++)px(c,x+Math.floor(r()*96),y+Math.floor(r()*48),'#f0f8ff');
+  // blade
+  for(let i=8;i<70;i++){px(c,x+i,y+21,'#283048');px(c,x+i,y+22,'#f8fcff');px(c,x+i,y+23,'#c8d8f0');px(c,x+i,y+24,'#8898b8');px(c,x+i,y+25,'#283048');}
+  for(let k=0;k<6;k++){const i=70+k;const top=21+Math.floor(k*0.4),bot=25-Math.floor(k*0.4);for(let yy=top;yy<=bot;yy++)px(c,x+i,y+yy,yy===top||yy===bot?'#283048':(yy<23?'#f8fcff':'#c8d8f0'));}
+  px(c,x+76,y+23,'#283048');
+  // guard, grip, pommel (blade points right; grip on left)
+  rect(c,x+6,y+15,4,17,'#283048');rect(c,x+7,y+16,2,15,'#f0c840');px(c,x+7,y+16,'#fff8c8');
+  rect(c,x-2+2,y+21,6,5,'#283048');rect(c,x+1,y+22,5,3,'#604028');
+  // ice glints along the edge
+  for(let i=12;i<66;i+=9){px(c,x+i,y+20,'#ffffff');px(c,x+i+1,y+19,'#ffffff');}
+}
+function artLetter(c,x,y){
+  vgrad(c,x,y,96,48,['#080c28','#0c1038','#141850','#1c2060']);
+  const r=rng(5);
+  for(let i=0;i<40;i++)px(c,x+Math.floor(r()*96),y+Math.floor(r()*30),r()<0.3?'#ffffff':'#a0b0e0');
+  // window sill
+  rect(c,x,y+40,96,8,'#3c2818');rect(c,x,y+40,96,1,'#6c4828');
+  // letter
+  rect(c,x+24,y+10,48,30,'#584020');rect(c,x+25,y+11,46,28,'#f0e0b0');
+  for(let i=0;i<23;i++){px(c,x+25+i,y+11+Math.floor(i*0.6),'#b89860');px(c,x+70-i,y+11+Math.floor(i*0.6),'#b89860');}
+  rect(c,x+46,y+22,5,5,'#902020');px(c,x+47,y+23,'#d04040');
+  for(let j=0;j<3;j++)rect(c,x+28,y+30+j*3,20+j*6,1,'#c0a878');
+}
+function artFormation(c,x,y){
+  vgrad(c,x,y,96,48,['#102018','#142818','#1c3420','#244028']);
+  const rows=[6,10,15,21,28,36,46];
+  rows.forEach(yy=>rect(c,x,y+yy,96,1,'#38603c'));
+  for(let i=0;i<9;i++){const sx=i*12;for(let yy=6;yy<48;yy++){const spread=(yy-6)/42;const xx=Math.round(48+(sx-48)*(1+spread*0.6));if(xx>=0&&xx<96&&((yy+xx)&1))px(c,x+xx,y+yy,'#38603c');}}
+  const fig=(fx,fy,col,dark)=>{rect(c,x+fx+1,y+fy,4,4,col);rect(c,x+fx,y+fy+4,6,7,col);rect(c,x+fx,y+fy+11,2,4,dark);rect(c,x+fx+4,y+fy+11,2,4,dark);rect(c,x+fx+6,y+fy+5,1,5,'#c8d0e8');};
+  fig(44,8,'#3858c8','#203088');fig(26,22,'#c83030','#801818');fig(62,22,'#40a860','#206030');
+  // enemy direction arrow
+  for(let i=0;i<8;i++){px(c,x+12+i,y+16,'#f8f8f8');} for(let k=0;k<3;k++){px(c,x+12+k,y+16-k,'#f8f8f8');px(c,x+12+k,y+16+k,'#f8f8f8');}
+}
+function artDestiny(c,x,y){
+  for(let j=0;j<48;j++)for(let i=0;i<96;i++){
+    const a=Math.atan2(j-24,i-48);const band=Math.floor(((a+Math.PI)/(2*Math.PI))*24)%2;
+    const d=Math.hypot((i-48)/2,j-24);
+    let col=band?'#a06818':'#705010'; if(d<10)col=band?'#f0c840':'#e0a830'; else if(d<18)col=band?'#d09028':'#b07820';
+    px(c,x+i,y+j,col);
+  }
+  sprite(c,x+32,y,KNIGHT_ROWS,HERO);
+  sprite(c,x+58,y+2,GLIM,GLIMPAL);
+}
+
+// ---------- card renderer 112x144 ----------
+const TYPECOL={Tech:'#4888f0',Spell:'#c858e8',Equipment:'#48b868',Story:'#e8a848',Formation:'#a8b0c8',Destiny:'#f0d048'};
+function linkShape(c,x,y,kind){ // 5x5 shapes
+  const w='#f8f8f8';
+  if(kind==='circle'){[[1,0],[2,0],[3,0],[0,1],[4,1],[0,2],[4,2],[0,3],[4,3],[1,4],[2,4],[3,4]].forEach(p=>px(c,x+p[0],y+p[1],w));}
+  if(kind==='dot'){[[1,0],[2,0],[3,0],[0,1],[1,1],[2,1],[3,1],[4,1],[0,2],[1,2],[2,2],[3,2],[4,2],[0,3],[1,3],[2,3],[3,3],[4,3],[1,4],[2,4],[3,4]].forEach(p=>px(c,x+p[0],y+p[1],w));}
+  if(kind==='diamond'){[[2,0],[1,1],[3,1],[0,2],[4,2],[1,3],[3,3],[2,4]].forEach(p=>px(c,x+p[0],y+p[1],w));}
+  if(kind==='fdiamond'){[[2,0],[1,1],[2,1],[3,1],[0,2],[1,2],[2,2],[3,2],[4,2],[1,3],[2,3],[3,3],[2,4]].forEach(p=>px(c,x+p[0],y+p[1],w));}
+}
+function card(c,d){
+  win(c,0,0,112,144,d.type==='Destiny'?['#705010','#5c400c','#483008','#382408','#281804']:undefined);
+  text(c,d.name,6,6);
+  rect(c,4,16,104,1,TYPECOL[d.type]);rect(c,4,17,104,1,'#101020');
+  rect(c,7,19,98,50,'#080810');
+  c.save();c.beginPath();c.rect(8,20,96,48);c.clip();d.art(c,8,20);c.restore();
+  frame1(c,7,19,98,50,'#080810');frame1(c,8,20,96,48,'#c8c8d8');
+  if(d.icon)sprite(c,8,74,d.icon,ICON);
+  if(d.tier!=null){for(let i=0;i<5;i++){const col=i<d.tier?'#f0c840':'#282850';const x=30+i*8,y=79;[[2,0],[1,1],[2,1],[3,1],[0,2],[1,2],[2,2],[3,2],[4,2],[1,3],[2,3],[3,3],[2,4]].forEach(p=>px(c,x+p[0],y+p[1],col));}}
+  else text(c,d.typeLabel||d.type.toUpperCase(),30,78,'#a8b0c8');
+  if(d.cost){rect(c,74,73,32,16,'#080810');win(c,75,74,30,14,['#141c58','#0c1040']);text(c,d.cost,78,77,d.costCol||'#f8f8f8');}
+  if(d.link){linkShape(c,8,94,d.link[0]);rect(c,15,96,10,1,'#a8a8c0');linkShape(c,27,94,d.link[1]);text(c,'COMBO',40,93,'#a8b0c8');}
+  d.lines.forEach((ln,i)=>{if(typeof ln==='string')text(c,ln,8,104+i*10);else text(c,ln[0],8,104+i*10,ln[1]);});
+}
+
+const CARDS=[
+  {name:'CROSS SLASH',type:'Tech',cost:'2WP',tier:2,icon:IC_SWORD,art:artSlash,link:['circle','fdiamond'],
+   lines:['DEAL 12 x2','',['SPARK>TIGER','#f8d848'],['BREAK   8%','#f8d848']],
+   cap:'Tech. Costs WP. Shows what it can spark and the base chance. Opens a combo with a circle, closes with a filled diamond.'},
+  {name:'FIRE WALL',type:'Spell',cost:'3JP',typeLabel:'FIRE',icon:IC_FIRE,art:artFire,
+   lines:['ALL ENEMIES','DEAL 9','BURN 2',''],
+   cap:'Spell. Costs JP, bought at a magic school. No tier pips because spells are not sparked; the school name sits in their place.'},
+  {name:'WINTERMARK',type:'Equipment',tier:5,icon:IC_SWORD,art:artBlade,
+   lines:['WEAPON:SWORD','+4 DMG','+2 WP START',['SERIN ACT II','#f8d848']],
+   cap:'Equipment. Lives in the deck but auto-equips when drawn. This one is a Chronicle reward, flagged in gold.'},
+  {name:'LETTER HOME',type:'Story',icon:IC_SCROLL,art:artLetter,
+   lines:['SERIN ACT I','REVEAL THE','BLADE\'S','PATH'],
+   cap:'Story. Free to play. Starts a Chronicle act. Art leans on scene rather than action.'},
+  {name:'ROYAL WEDGE',type:'Formation',icon:IC_FORM,art:artFormation,
+   lines:['FRONT HERO','GUARDS BACK','ROW. +1 WP','EACH ROUND'],
+   cap:'Formation. Party-wide. Art shows the positions on a battle floor with the enemy direction marked.'},
+  {name:'STEEL OATH',type:'Destiny',icon:IC_STAR,art:artDestiny,
+   lines:['ONCE/BATTLE','SPEND ALL WP',['GUARANTEED','#f8d848'],['SPARK','#f8d848']],
+   cap:'Destiny. The only card with a gold window. One per hero, earned by finishing the Chronicle.'}
+];
+
+// ---------- battle screen 256x224 ----------
+function battle(c){
+  vgrad(c,0,0,256,120,['#08081c','#0c1028','#101838','#182448','#203058']);
+  const r=rng(21);
+  // stalactites
+  for(let i=0;i<256;i+=1){const h=Math.round(10+Math.sin(i*0.21)*6+Math.sin(i*0.07)*8+r()*3);for(let j=0;j<h;j++)px(c,i,j,j>h-3?'#0c1028':'#040410');}
+  // distant pillars
+  [30,120,210].forEach(x=>{for(let j=18;j<120;j++){const w=6+Math.floor((j-18)/30);for(let k=0;k<w;k++)px(c,x+k,j,((j+k)&1)?'#101838':'#0c1430');}});
+  // floor
+  vgrad(c,0,120,256,24,['#3c3028','#30261e','#241a14','#180e0a']);
+  rect(c,0,120,256,1,'#5c4a38');
+  for(let i=0;i<120;i++)px(c,Math.floor(r()*256),121+Math.floor(r()*22),'#4c3c30');
+  // enemies with intent bubbles
+  wraith(c,20,62,1);wraith(c,64,66,2);wraith(c,108,80,3);
+  const intent=(x,y,kind)=>{rect(c,x,y,12,12,'#f8f8f8');rect(c,x+1,y+1,10,10,'#182068');
+    if(kind==='atk'){for(let k=0;k<7;k++){px(c,x+2+k,y+8-k,'#f8f8f8');}px(c,x+3,y+8,'#f0c840');px(c,x+2,y+7,'#f0c840');}
+    if(kind==='lp'){rect(c,x+3,y+4,2,2,'#e03848');rect(c,x+7,y+4,2,2,'#e03848');rect(c,x+2,y+5,8,2,'#e03848');rect(c,x+3,y+7,6,1,'#e03848');rect(c,x+4,y+8,4,1,'#e03848');rect(c,x+5,y+9,2,1,'#e03848');}
+    if(kind==='spell'){rect(c,x+5,y+2,2,8,'#c858e8');rect(c,x+2,y+5,8,2,'#c858e8');}};
+  intent(30,46,'atk');intent(74,50,'lp');intent(118,64,'spell');
+  // damage number over the first wraith
+  text(c,'24',28,32,'#ffffff');
+  // heroes
+  sprite(c,178,68,KNIGHT_ROWS,HERO);
+  sprite(c,206,92,KNIGHT_ROWS,HERO2);
+  sprite(c,190,54,GLIM,GLIMPAL);
+  // status strip
+  win(c,0,144,256,28);
+  text(c,'SERIN HP142 LP11 WP5 JP2',8,150);
+  text(c,'ODA   HP 96 LP13 WP3 JP0',8,160,'#c8d0e8');
+  rect(c,206,151,42,6,'#101020');rect(c,207,152,40,4,'#282850');rect(c,207,152,34,4,'#48c860');
+  rect(c,206,161,42,6,'#101020');rect(c,207,162,40,4,'#282850');rect(c,207,162,18,4,'#e8c040');
+  // hand window
+  win(c,0,172,256,52);
+  const hand=[['CROSS','2',IC_SWORD],['GUARD','0',IC_SHIELD],['PARRY','2',IC_SWORD],['FEINT','1',IC_SWORD],['FIRE ','3',IC_FIRE]];
+  hand.forEach((h,i)=>{
+    const x=8+i*48, sel=i===0, y=sel?176:180;
+    rect(c,x,y,44,40,sel?'#f8f8f8':'#080810');
+    vgrad(c,x+1,y+1,42,38,sel?['#3848b8','#283898','#202c80']:['#1c2470','#141c58','#101448']);
+    if(!sel)frame1(c,x+1,y+1,42,38,'#404870');
+    sprite(c,x+14,y+5,h[2],ICON);
+    text(c,h[1],x+3,y+3,'#f8d848');
+    text(c,h[0],x+2,y+28);
+  });
+  // cursor
+  const cx=4,cy=200;[[0,0],[1,0],[2,0],[3,0],[4,0],[5,0],[0,1],[1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[0,2],[1,2],[2,2],[3,2],[4,2],[5,2],[6,2],[7,2],[0,3],[1,3],[2,3],[3,3],[4,3],[5,3],[6,3],[0,4],[1,4],[2,4],[3,4],[4,4],[5,4]].forEach(p=>px(c,cx+p[0]-3,cy+p[1],'#f8f8f8'));
+}
+
+// ---------- build page ----------
+document.fonts.load('8px "Press Start 2P"').then(()=>{
+  // palette
+  const pal=document.getElementById('pal');
+  Object.keys(HERO).forEach(k=>{const d=document.createElement('div');const s=document.createElement('span');s.style.background=HERO[k];d.appendChild(s);d.appendChild(document.createTextNode(HERO_NAMES[k]+' '+HERO[k]));pal.appendChild(d);});
+  // cards
+  const cards=document.getElementById('cards');
+  CARDS.forEach(d=>show(cards,112,144,3,c=>card(c,d),d.type+': '+d.cap));
+  // battle
+  show(document.getElementById('battle'),256,224,3,battle,'Three Tide Wraiths with intents (attack, LP drain, spell). Serin has just sparked. Oda is a palette swap of the same sprite.');
+  // sheet
+  const sh=document.getElementById('sheet');
+  show(sh,32,48,1,c=>sprite(c,0,0,KNIGHT_ROWS,HERO),'1x');
+  show(sh,32,48,3,c=>sprite(c,0,0,KNIGHT_ROWS,HERO),'3x, Serin');
+  show(sh,32,48,6,c=>sprite(c,0,0,KNIGHT_ROWS,HERO),'6x');
+  show(sh,32,48,6,c=>sprite(c,0,0,KNIGHT_ROWS,HERO2),'6x, palette swap (Oda)');
+  show(sh,32,40,6,c=>wraith(c,0,0,1),'6x, Tide Wraith');
+  show(sh,130,16,4,c=>{[IC_SWORD,IC_SHIELD,IC_FIRE,IC_HEART,IC_FORM,IC_SCROLL,IC_STAR].forEach((ic,i)=>sprite(c,i*18,0,ic,ICON));},'4x icons: sword, guard, fire, LP, formation, story, destiny');
+  show(sh,8,11,8,c=>sprite(c,0,0,GLIM,GLIMPAL),'8x glimmer bubble');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Audio Test Bench</title>
+  <style>
+    :root {
+      --bg: #14121c; --panel: #201d2c; --ink: #ece6d6; --muted: #a49cb8; --accent: #e3b25a; --btn: #2e2a40; --btn-hi: #3d3756;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.4 system-ui, sans-serif; padding: 16px; }
+    h1 { font-size: 20px; margin: 0 0 4px; color: var(--accent); }
+    h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 8px; }
+    p.note { color: var(--muted); margin: 0 0 16px; }
+    section { background: var(--panel); border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+    .grid { display: flex; flex-wrap: wrap; gap: 6px; }
+    button { background: var(--btn); color: var(--ink); border: 1px solid #47405f; border-radius: 6px; padding: 6px 10px; font: inherit; cursor: pointer; }
+    button:hover { background: var(--btn-hi); }
+    button.on { border-color: var(--accent); color: var(--accent); }
+    label { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+    label span { width: 60px; }
+    input[type=range] { width: 200px; max-width: 60vw; }
+    input[type=number] { width: 64px; background: var(--btn); color: var(--ink); border: 1px solid #47405f; border-radius: 4px; padding: 4px; }
+    #info { font-family: ui-monospace, monospace; color: var(--muted); white-space: pre-wrap; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Fantastic Chronicle: audio test bench</h1>
+  <p class="note">All sound is synthesized live with WebAudio. Any click unlocks audio.</p>
+
+  <section>
+    <h2>Music</h2>
+    <label><span>Variant</span><input id="variant" type="number" min="0" max="99" value="0" />
+      <button id="prevVar">-</button><button id="nextVar">+</button></label>
+    <div class="grid" id="tracks"></div>
+    <div class="grid" style="margin-top:8px">
+      <button id="stop">Stop (fade 0.8 s)</button>
+      <button id="stopNow">Stop now</button>
+    </div>
+    <div id="info">No track playing.</div>
+  </section>
+
+  <section>
+    <h2>Jingles</h2>
+    <div class="grid" id="jingles"></div>
+  </section>
+
+  <section>
+    <h2>Sound effects</h2>
+    <label><span>Pitch</span><input id="pitch" type="range" min="-12" max="12" step="1" value="0" /><output id="pitchOut">0</output></label>
+    <div class="grid" id="sfx"></div>
+  </section>
+
+  <section>
+    <h2>Volume</h2>
+    <label><span>Master</span><input data-vol="master" type="range" min="0" max="1" step="0.01" /></label>
+    <label><span>Music</span><input data-vol="music" type="range" min="0" max="1" step="0.01" /></label>
+    <label><span>SFX</span><input data-vol="sfx" type="range" min="0" max="1" step="0.01" /></label>
+    <button id="mute">Mute</button>
+  </section>
+
+  <script type="module" src="./demo.ts"></script>
+</body>
+</html>
