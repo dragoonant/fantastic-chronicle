@@ -3,14 +3,14 @@ let have = new Set<string>();
 
 export async function loadArt() {
   try {
-    const r = await fetch('/art/manifest.json', { cache: 'no-cache' });
+    const r = await fetch(`${import.meta.env.BASE_URL}art/manifest.json`, { cache: 'no-cache' });
     if (r.ok) have = new Set((await r.json()) as string[]);
   } catch { /* no art yet: placeholders */ }
 }
 
 export function art(kind: string, id: string): string | null {
   const key = `${kind}/${id}`;
-  return have.has(key) ? `/art/${key}.png` : null;
+  return have.has(key) ? `${import.meta.env.BASE_URL}art/${key}.png` : null;
 }
 
 export function bg(kind: string, id: string): string {
