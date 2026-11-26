@@ -1,0 +1,67 @@
+# Test style LoRA for Fantastic Chronicle on FLUX.1-schnell (Apache 2.0), trained on the 8 Gemini style-bible heroes.
+# Run from tools/lora/ai-toolkit:  venv/Scripts/python run.py ../fc-style.yaml   (needs `hf auth login` and the
+# FLUX.1-schnell terms accepted on huggingface.co). Dataset: python -I tools/lora/make_dataset.py
+job: extension
+config:
+  name: fc-style-v1
+  process:
+    - type: sd_trainer
+      training_folder: ../output
+      device: cuda:0
+      trigger_word: fcsprite
+      network:
+        type: lora
+        linear: 16
+        linear_alpha: 16
+      save:
+        dtype: float16
+        save_every: 300
+        max_step_saves_to_keep: 5
+        push_to_hub: false
+      datasets:
+        - folder_path: ../../../art-masters/lora/dataset
+          caption_ext: txt
+          caption_dropout_rate: 0.0
+          shuffle_tokens: false
+          cache_latents_to_disk: true
+          resolution: [512]
+      train:
+        batch_size: 1
+        steps: 1500
+        gradient_accumulation_steps: 1
+        train_unet: true
+        train_text_encoder: false
+        gradient_checkpointing: true
+        noise_scheduler: flowmatch
+        optimizer: adamw8bit
+        lr: 1e-4
+        ema_config:
+          use_ema: true
+          ema_decay: 0.99
+        dtype: bf16
+        cache_text_embeddings: true  # encode captions once, then unload T5 to free VRAM on a 16 GB card
+        skip_first_sample: true
+      model:
+        name_or_path: black-forest-labs/FLUX.1-schnell
+        assistant_lora_path: ostris/FLUX.1-schnell-training-adapter
+        is_flux: true
+        quantize: true
+        low_vram: true
+        qtype_te: uint4  # T5 only encodes the captions once, then unloads; 4-bit keeps it and the transformer under 16 GB
+      sample:
+        sampler: flowmatch
+        sample_every: 500
+        width: 512
+        height: 512
+        prompts:
+          - "fcsprite, 16-bit pixel art battle sprite of a young knight with short brown hair in silver plate armour and a blue tabard, holding a longsword, full body, standing on a grey stone pedestal, dark blue background"
+          - "fcsprite, 16-bit pixel art battle sprite of a hulking horned ogre with grey-green skin and a stone club, full body, dark blue background"
+          - "fcsprite, 16-bit pixel art battle sprite of a drowned king in a barnacled crown and rotting blue robes, full body, dark blue background"
+        neg: ""
+        seed: 42
+        walk_seed: true
+        guidance_scale: 1
+        sample_steps: 4
+meta:
+  name: fc-style
+  version: "1.0"

@@ -113,7 +113,7 @@ function titleView(): string {
       <button class="btn big" data-act="new">New Chronicle</button>
       <button class="btn" data-act="help">How to play</button>
     </div>
-    <p class="dim" style="margin-top:40px">Prototype for playtesting · music and sound are generated live · art by FLUX on Hugging Face where available</p>
+    <p class="dim" style="margin-top:40px">Prototype for playtesting · music and sound are generated live · art by FLUX.1-schnell with a house-style LoRA trained on evilgouki's hero sheet</p>
   </div></div>`;
 }
 

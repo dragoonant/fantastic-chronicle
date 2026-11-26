@@ -4,3 +4,7 @@ art-masters/
 *.token*
 tools/.venv/
 dist/
+tools/lora/ai-toolkit/
+tools/lora/output/
+tools/lora/*.log
+tools/lora/fc-render*.yaml
